@@ -59,8 +59,9 @@ sudo docker run -it --rm \
 ```
 
 Several lines of log messages are written to the console. After the log messages
-slow down, start a second terminal and copy the echo-service WAR file into the
-`deployment` directory in the apiman-demo container.
+slow down, start a second terminal and run the following command to copy the
+echo-service WAR file into the `deployment` directory in the apiman-demo
+container.
 
 ```bash
 # Open a new terminal to run this command.
@@ -73,6 +74,9 @@ At this point, the apiman service is running and you can access it with a
 browser at <http://localhost:8080/apimanui>.
 
 ## Configure an API provider
+
+For this demonstration, Priya Pai, a developer with the Acme enterprise uses
+apiman to make the echo-service API available.
 
 1. Start a browser and access the API management interface at
    <http://localhost:8080/apimanui>.
@@ -158,7 +162,7 @@ browser at <http://localhost:8080/apimanui>.
       plan, and click the **Save** button.
 
    1. Select the **Policies** tab on the left, click the **Add Policy** button,
-      and add the API policy by specifying the following:
+      and add the API policy by specifying the following values:
 
       | Field                                             | Value                       |
       | ------------------------------------------------- | --------------------------- |
@@ -171,23 +175,26 @@ browser at <http://localhost:8080/apimanui>.
       Click the **Add** button to add the sample user and then click the **Add
       Policy** button to add the API policy.
 
-1. Near the top of the `echo-service` page, click the **Publish** button.
+1. At the top of the `echo-service` page, click the **Publish** button.
 
 At the top-right of the page, select **ppai > Logout**. The next steps require
 logging on as an API consumer.
 
 ## Configure an API consumer
 
+Chris Choi, a developer with the Omega enterprise, uses apiman to enable a
+client app for the echo-service.
+
 1. On the apiman realm page, click the **Register** link and then add a user
    account for the provider by specifying the following values:
 
-   | Field          | Value                |
-   | -------------- | -------------------- |
-   | **Username**   | cchoi                |
-   | **First name** | Chris                |
-   | **Last name**  | Choi                 |
-   | **Email**      | <cchoi@consumer.com> |
-   | **Password**   | cchoi                |
+   | Field          | Value             |
+   | -------------- | ----------------- |
+   | **Username**   | cchoi             |
+   | **First name** | Chris             |
+   | **Last name**  | Choi              |
+   | **Email**      | <cchoi@omega.com> |
+   | **Password**   | cchoi             |
 
    Click the **Register** button.
 
@@ -237,7 +244,8 @@ logging on as an API consumer.
    ```
 
 At the top-right of the page, select **cchoi > Logout**. The next step is to use
-the echo service from the command line to demonstrate the rate-limiting policy.
+the URL that you copied to access the echo-service from the command line. You
+can experience the rate-limiting policy after making several HTTP requests.
 
 ## Trigger the rate-limiting policy
 
@@ -292,7 +300,8 @@ the bodySha1 field matches the value from the `sha1sum` command.
 ```
 
 Run the `curl` command five more times to trigger the rate limit. When you
-trigger the limit, apiman provides a response that is similar to the following.
+trigger the limit, apiman no longer sends your request to the echo-service.
+Instead, apiman provides a response that is similar to the following.
 
 ```json
 {
@@ -310,8 +319,8 @@ trigger the limit, apiman provides a response that is similar to the following.
 
 ## Key benefits and next steps
 
-This article showed how apiman enabled the Acme enterprise to provide and manage
-a sample API. The Omega enterprise was able to discover and consume the sample
+This article showed how apiman enable the Acme enterprise to provide and manage
+a sample API. The Omega enterprise is able to discover and consume the sample
 API.
 
 This article took a few shortcuts with apiman that are easily fixed:
