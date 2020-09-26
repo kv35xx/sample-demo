@@ -319,7 +319,7 @@ Instead, apiman provides a response that is similar to the following.
 
 ## Key benefits and next steps
 
-This article showed how apiman enable the Acme enterprise to provide and manage
+This article shows how apiman enables the Acme enterprise to provide and manage
 a sample API. The Omega enterprise is able to discover and consume the sample
 API.
 
