@@ -1,0 +1,7 @@
+/* Override the appearance of inline code. */
+:not(pre):not(.hljs) > code {
+  background-color: #f9f9f9;
+  border: 0;
+  color: #191919;
+  font-size: inherit;
+}
