@@ -3,7 +3,7 @@
 apiman is an API management system that addresses the following needs for
 enterprises:
 
-- Publicize APIs by making them discoverable
+- Publicize APIs to make them discoverable by API consumers
 - Track API use and consumption for rate limiting and monetization
 
 This article provides a rapid walk through that shows how to deploy a sample
@@ -13,15 +13,15 @@ application, echo-service, and configure apiman to apply a rate-limiting policy.
 
 apiman provides enterprise capabilities and those capabilities are available
 through several configuration choices. To make the process of installing apiman,
-deploying the echo-service API, and configuring apiman a easier to follow, the
-article follows these high-level steps:
+deploying echo-service, and configuring apiman easier to understand, this
+article shows these high-level steps:
 
 - Download and build the echo-service
 - Download and start apiman
 - Configure an API provider in apiman
 - Configure an API consumer in apiman
 - Configure a defined usage policy to perform rate-limiting
-- Use the echo-service and trigger the rate-limiting policy
+- Use the echo-service with `curl` to trigger the rate-limiting policy
 
 ## Download and build the echo-service
 
@@ -44,7 +44,7 @@ sudo docker run -it --rm -v "$(pwd)":/mnt -w /mnt maven:3-jdk-8 mvn package
 
 After Docker downloads the maven image, maven builds the project and creates the
 `./echo-service/target/apiman-quickstarts-echo-service-1.3.1.Final.war` file.
-The WAR file is used in the next step.
+The echo-service WAR file is used in the next step.
 
 ## Download and start apiman
 
@@ -59,7 +59,7 @@ sudo docker run -it --rm \
 ```
 
 Several lines of log messages are written to the console. After the log messages
-slow down, start a second terminal and run the following command to copy the
+pause, start a second terminal and run the following command to copy the
 echo-service WAR file into the `deployment` directory in the apiman-demo
 container.
 
@@ -70,8 +70,11 @@ sudo docker cp \
   apiman-demo:/opt/jboss/wildfly/standalone/deployments
 ```
 
-At this point, the apiman service is running and you can access it with a
-browser at <http://localhost:8080/apimanui>.
+> After you run the `docker cp` command, you can close the second terminal.
+
+At this point, the echo-service is deployed and the apiman service is running.
+You can access the API management interface with a browser at
+<http://localhost:8080/apimanui>.
 
 ## Configure an API provider
 
@@ -81,21 +84,21 @@ apiman to make the echo-service API available.
 1. Start a browser and access the API management interface at
    <http://localhost:8080/apimanui>.
 
-1. Click the **Register** link and then add a user account for the provider by
-   specifying the following values:
+1. Click the **Register** link and then add a user account for the API provider
+   by specifying the following values:
 
-   | Field          | Value               |
-   | -------------- | ------------------- |
-   | **Username**   | ppai                |
-   | **First name** | Priya               |
-   | **Last name**  | Pai                 |
-   | **Email**      | <ppai@provider.com> |
-   | **Password**   | ppai                |
+   | Field          | Value           |
+   | -------------- | --------------- |
+   | **Username**   | ppai            |
+   | **First name** | Priya           |
+   | **Last name**  | Pai             |
+   | **Email**      | <ppai@acme.com> |
+   | **Password**   | ppai            |
 
    Click the **Register** button.
 
 1. On the dashboard page, click the **Create a New Organization** link and then
-   add an organization by specifying the following values:
+   add the an organization for Acme by specifying the following values:
 
    | Field                 | Value                            |
    | --------------------- | -------------------------------- |
@@ -126,6 +129,9 @@ apiman to make the echo-service API available.
    | **Granularity**   | Client App |
    | **Period**        | Day        |
 
+   > The number of requests is set very low so that the limit can be triggered
+   > quickly.
+
    Accept the default values for the other fields and click the **Add Policy**
    button.
 
@@ -145,7 +151,7 @@ apiman to make the echo-service API available.
 
    Click the **Create API** button.
 
-1. Configure the service on the `echo-service` API page by performing the
+1. Configure the API details on the `echo-service` page by performing the
    following steps:
 
    1. Select the **Implementation** tab on the left and then add the
@@ -185,8 +191,9 @@ logging on as an API consumer.
 Chris Choi, a developer with the Omega enterprise, uses apiman to enable a
 client app for the echo-service.
 
-1. On the apiman realm page, click the **Register** link and then add a user
-   account for the provider by specifying the following values:
+1. On the apiman realm page, <http://localhost:8080/apimanui>, click the
+   **Register** link and then add a user account for the API consumer by
+   specifying the following values:
 
    | Field          | Value             |
    | -------------- | ----------------- |
@@ -199,7 +206,7 @@ client app for the echo-service.
    Click the **Register** button.
 
 1. On the dashboard page, click the **Create a New Organization** link and then
-   add an organization by specifying the following values:
+   add an organization for Omega by specifying the following values:
 
    | Field                 | Value                            |
    | --------------------- | -------------------------------- |
@@ -222,8 +229,8 @@ client app for the echo-service.
 1. On the `echo` client app page, click the **Search for APIs to consume** link.
 
 1. On the **Find an API** page, enter `echo-service` in the search field and
-   click **Search**. When the search results are returned, click the **Acme /
-   echo-service** link.
+   click **Search**. Click the **Acme / echo-service** link from the search
+   results.
 
 1. On the **API Details** page for `echo-service`, click the **Create Contract**
    button for the `gold` plan.
@@ -244,12 +251,13 @@ client app for the echo-service.
    ```
 
 At the top-right of the page, select **cchoi > Logout**. The next step is to use
-the URL that you copied to access the echo-service from the command line. You
-can experience the rate-limiting policy after making several HTTP requests.
+`curl` with the URL that you copied to access the echo-service. You can
+experience the rate-limiting policy after making several HTTP requests.
 
 ## Trigger the rate-limiting policy
 
-The last step is to use the echo-service and trigger the rate-limiting policy.
+The last step is to use `curl` with the echo-service to trigger the
+rate-limiting policy.
 
 Create a sample file for the HTTP request payload.
 
@@ -259,16 +267,17 @@ cat << EOF > /tmp/payload.json
 EOF
 ```
 
-The echo service accepts the body of the HTTP request, hashes it with SHA1, and
-then returns the hash value. You can calculate the hash with the `sha1sum`
-command. The hash value is `b4ff397ff32fcefd37e89cad6086422b88142423`.
+The echo-service accepts the body of the HTTP request, hashes it with the SHA1
+hash function, and then returns the hash value. You can calculate the hash with
+the `sha1sum` command. The hash value is
+`b4ff397ff32fcefd37e89cad6086422b88142423`.
 
 ```bash
 echo -n '{"message": "hello apiman"}' | sha1sum
 ```
 
-Run the following command to use the echo service. Replace the URL with the
-value that you copied from the `echo` client app page.
+Run the following command to use the echo-service. Use the URL that you copied
+from the `echo` client app page.
 
 ```bash
 curl -k -u user1:pass1 -H "Content-Type: application/json" \
@@ -277,7 +286,7 @@ curl -k -u user1:pass1 -H "Content-Type: application/json" \
 ```
 
 The service returns a response that is similar to the following. The value for
-the bodySha1 field matches the value from the `sha1sum` command.
+the bodySha1 field matches the output from the `sha1sum` command.
 
 ```json
 {
@@ -323,17 +332,17 @@ This article shows how apiman enables the Acme enterprise to provide and manage
 a sample API. The Omega enterprise is able to discover and consume the sample
 API.
 
-This article took a few shortcuts with apiman that are easily fixed:
+This article showed a few shortcuts with apiman that are easily fixed:
 
 - apiman is easily configured to use LDAP so that users do not need to register
-  themselves.
-- apiman supports several popular databases for persistence.
-- apiman supports deploying several API gateways for high-volume APIs.
+  themselves
+- apiman supports several popular databases for persistence
+- apiman supports deploying several API gateways for high-volume APIs
 
 Some next steps that enterprises will want to take with apiman:
 
-- Integrate security with a popular protocol such as OAuth.
-- Collect metrics for API consumption to initiate billing.
+- Integrate security with a popular protocol such as OAuth
+- Collect metrics for API consumption to initiate billing
 
 For information about important concepts like organizations, policies, client
 apps, and so on, refer to the apiman documentation:
