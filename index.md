@@ -7,7 +7,8 @@ enterprises:
 - Track API use and consumption for rate limiting and monetization
 
 This article provides a rapid walk through that shows how to deploy a sample
-application, echo-service, and configure apiman to apply a rate-limiting policy.
+application that is named echo-service and to configure apiman to apply a
+rate-limiting policy.
 
 ## Overview
 
@@ -16,12 +17,12 @@ through several configuration choices. To make the process of installing apiman,
 deploying echo-service, and configuring apiman easier to understand, this
 article shows these high-level steps:
 
-- Download and build the echo-service
-- Download and start apiman
-- Configure an API provider in apiman
-- Configure an API consumer in apiman
-- Configure a defined usage policy to perform rate-limiting
-- Use the echo-service with `curl` to trigger the rate-limiting policy
+1. Download and build the echo-service
+2. Download and start apiman
+3. Configure an API provider in apiman
+4. Configure an API consumer in apiman
+5. Configure a defined usage policy to perform rate-limiting
+6. Use the echo-service with `curl` to trigger the rate-limiting policy
 
 ## Download and build the echo-service
 
@@ -98,7 +99,7 @@ apiman to make the echo-service API available.
    Click the **Register** button.
 
 1. On the dashboard page, click the **Create a New Organization** link and then
-   add the an organization for Acme by specifying the following values:
+   add an organization for Acme by specifying the following values:
 
    | Field                 | Value                            |
    | --------------------- | -------------------------------- |
